@@ -1,25 +1,26 @@
 package Search.Board;
 
-import Basics.Board;
 import Basics.Drawable;
 import Basics.Tile;
 import Search.Algorithm;
+import Search.InformedAlgorithm;
 import Search.Node;
 import Visualization.StackVisualizer;
 import Visualization.Visualizer;
 
 import java.awt.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class BoardPathAlgorithm extends Algorithm<Tile> {
+public abstract class InformedBoardPathAlgorithm extends InformedAlgorithm<Tile> {
 
     protected BoardPathProblem problem;
     protected Set<Tile> explored;
 
     protected Node<Tile> goal;
 
-    protected BoardPathAlgorithm(float interval_in_sec) {
+    protected InformedBoardPathAlgorithm(float interval_in_sec) {
         super(interval_in_sec);
     }
 

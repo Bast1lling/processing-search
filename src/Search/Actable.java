@@ -1,5 +1,5 @@
 package Search;
 
-public interface Actor {
+public interface Actable {
     void act();
 }

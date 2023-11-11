@@ -140,7 +140,7 @@ public class Board implements Drawable{
 
     public void initializeSimplePerlinColorBoard(){
 
-        float step_size = 0.06f;
+        float step_size = 0.035f;
         float b1 = 0.33f;
         float b2 = 0.66f;
 

@@ -3,9 +3,9 @@ package Search.Board;
 import Basics.Board;
 import Basics.Tile;
 import Search.Action;
-import Search.Actor;
-import Search.Node;
+import Search.Actable;
 import Search.Problem;
+import Search.Valuable;
 import processing.core.PVector;
 
 import java.awt.*;
@@ -18,28 +18,30 @@ public class BoardPathProblem extends Problem<Tile> {
     public BoardPathProblem(Tile state, Board board) {
         super(state);
         this.board = board;
+        //define cost by absolute difference of two colors
+        this.costCalculator = compareCostByColorDist();
     }
 
     @Override
     public List<Action> getActions(Tile state) {
         int x_index = board.getX(state);
         int y_index = board.getY(state);
-        Actor move_up = () -> {
+        Actable move_up = () -> {
             board.deselect(state);
             Tile next = board.getTile(x_index,y_index-1);
             board.select(next);
         };
-        Actor move_right = () -> {
+        Actable move_right = () -> {
             board.deselect(state);
             Tile next = board.getTile(x_index+1,y_index);
             board.select(next);
         };
-        Actor move_left = () -> {
+        Actable move_left = () -> {
             board.deselect(state);
             Tile next = board.getTile(x_index-1,y_index);
             board.select(next);
         };
-        Actor move_down = () -> {
+        Actable move_down = () -> {
             board.deselect(state);
             Tile next = board.getTile(x_index,y_index+1);
             board.select(next);
@@ -79,18 +81,19 @@ public class BoardPathProblem extends Problem<Tile> {
     }
 
     @Override
-    public float getCost(Tile state1, Tile state2, Action action) {
-        if(state1 == null || state2 == null)
-            return Float.MAX_VALUE;
-        Color c1 = state1.getColor();
-        PVector p1 = new PVector(c1.getRed(),c1.getGreen(),c1.getBlue());
-        Color c2 = state2.getColor();
-        PVector p2 = new PVector(c2.getRed(),c2.getGreen(),c2.getBlue());
-        return p1.dist(p2);
-    }
-
-    @Override
     public boolean reached(Tile current) {
         return current.hasColor(Color.BLACK) == 0;
+    }
+
+    public static Valuable<Float,Tile> compareCostByColorDist(){
+        return (o1,o2,a) -> {
+            if(o1 == null || o2 == null)
+                return Float.MAX_VALUE;
+            Color c1 = o1.getColor();
+            PVector p1 = new PVector(c1.getRed(),c1.getGreen(),c1.getBlue());
+            Color c2 = o2.getColor();
+            PVector p2 = new PVector(c2.getRed(),c2.getGreen(),c2.getBlue());
+            return p1.dist(p2);
+        };
     }
 }

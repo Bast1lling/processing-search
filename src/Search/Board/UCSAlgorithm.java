@@ -27,6 +27,7 @@ public class UCSAlgorithm extends BoardPathAlgorithm{
             //cost to go to n1 from parent
             float c1 = problem.getCost(n1.getParent().getState(), n1.getState(), null);
             float c2 = problem.getCost(n2.getParent().getState(), n2.getState(), null);
+            //the smaller value has higher priority
             return Float.compare(c1,c2);
         });
         frontier.add(new Node<>(start,null,null));
