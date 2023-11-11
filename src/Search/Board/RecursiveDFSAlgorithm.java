@@ -13,8 +13,8 @@ import java.util.List;
 public class RecursiveDFSAlgorithm extends BoardPathAlgorithm{
 
 
-    public RecursiveDFSAlgorithm(float interval_in_sec) {
-        super(interval_in_sec);
+    public RecursiveDFSAlgorithm(int refreshRate) {
+        super(refreshRate);
     }
 
     public void setProblem(Tile start, Board board) {

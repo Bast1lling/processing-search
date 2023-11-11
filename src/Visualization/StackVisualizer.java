@@ -10,8 +10,8 @@ import java.util.LinkedList;
 public class StackVisualizer extends Visualizer{
     Deque<Drawable> stack;
 
-    public StackVisualizer(float interval_in_sec, Collection<Drawable> drawables) {
-        super(interval_in_sec);
+    public StackVisualizer(int refreshRate, Collection<Drawable> drawables) {
+        super(refreshRate);
         stack = new LinkedList<>(drawables);
     }
 

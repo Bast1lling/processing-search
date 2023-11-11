@@ -20,8 +20,8 @@ public abstract class InformedBoardPathAlgorithm extends InformedAlgorithm<Tile>
 
     protected Node<Tile> goal;
 
-    protected InformedBoardPathAlgorithm(float interval_in_sec) {
-        super(interval_in_sec);
+    protected InformedBoardPathAlgorithm(int refreshRate) {
+        super(refreshRate);
     }
 
     public Node<Tile> getGoal() {
@@ -36,7 +36,7 @@ public abstract class InformedBoardPathAlgorithm extends InformedAlgorithm<Tile>
         Collection<Drawable> collection = goal.getRootPath().stream().map(tileNode -> (Drawable) (() -> tileNode.getState().draw(Color.WHITE))).collect(Collectors.toList());
         //reset goal
         this.goal = null;
-        return new StackVisualizer(2f/collection.size(),collection);
+        return new StackVisualizer(1,collection);
     }
 
 }

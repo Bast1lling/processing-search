@@ -13,8 +13,8 @@ public class CleverBFSAlgorithm extends BoardPathAlgorithm {
     protected Deque<Node<Tile>> frontier;
     private Set<Tile> explored_frontier;
 
-    public CleverBFSAlgorithm(float interval_in_sec, Tile start, Board board) {
-        super(interval_in_sec);
+    public CleverBFSAlgorithm(int refreshRate, Tile start, Board board) {
+        super(refreshRate);
         setProblem(start, board);
     }
 

@@ -14,8 +14,8 @@ public class GreedyBFSAlgorithm extends InformedBoardPathAlgorithm{
     private PriorityQueue<Node<Tile>> frontier;
     private Set<Tile> explored_tiles;
 
-    public GreedyBFSAlgorithm(float interval_in_sec, Tile start, Board board) {
-        super(interval_in_sec);
+    public GreedyBFSAlgorithm(int refreshRate, Tile start, Board board) {
+        super(refreshRate);
         setProblem(start, board);
     }
 

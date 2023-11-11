@@ -30,18 +30,23 @@ public class SearchSketch extends PApplet {
         size(700,700);
         Color[] colors = {Color.BLUE, Color.RED,Color.GREEN};
         board = new Board(70,70,this, colors);
-        board.initializePerlinColorBoard();
-        //frameRate(Visualizer.FRAME_RATE);
-        cleverDFS = new CleverDFSAlgorithm(0.05f,board.getTile(0,0),board);
-        cleverBFS = new CleverBFSAlgorithm(0.05f,board.getTile(0,0),board);
-        recurDFS = new RecursiveDFSAlgorithm(0.05f);
-        ucsAlgorithm = new UCSAlgorithm(0.05f,board.getTile(0,0),board);
-        greedyBFS = new GreedyBFSAlgorithm(0.05f,board.getTile(0,0),board);
+        board.initializePerlinGreyBoard();
+        int refreshRate = 1;
+        cleverDFS = new CleverDFSAlgorithm(refreshRate,board.getTile(0,0),board);
+        cleverBFS = new CleverBFSAlgorithm(refreshRate,board.getTile(0,0),board);
+        recurDFS = new RecursiveDFSAlgorithm(refreshRate);
+        ucsAlgorithm = new UCSAlgorithm(refreshRate,board.getTile(0,0),board);
+        greedyBFS = new GreedyBFSAlgorithm(refreshRate,board.getTile(0,0),board);
+    }
+
+    @Override
+    public void setup() {
+        frameRate(Visualizer.FRAME_RATE);
     }
 
     @Override
     public void draw() {
-        background(0);
+        //background(0);
         board.draw();
         if(run && (visualizer !=null || cleverBFS != null || cleverDFS != null)) {
             //cleverDFS.visualize();
@@ -52,7 +57,7 @@ public class SearchSketch extends PApplet {
 
     @Override
     public void mousePressed() {
-        frameRate(Visualizer.FRAME_RATE);
+        //frameRate(Visualizer.FRAME_RATE);
         Tile tile = board.getCurrentPositionInMap(mouseX,mouseY);
         cleverBFS.setProblem(tile,board);
         cleverDFS.setProblem(tile,board);
@@ -66,7 +71,7 @@ public class SearchSketch extends PApplet {
     @Override
     public void keyPressed() {
         if(keyCode == 32)
-            run =! run;
+            run = !run;
     }
 
     @Override

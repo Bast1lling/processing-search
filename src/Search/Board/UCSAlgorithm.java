@@ -13,8 +13,8 @@ public class UCSAlgorithm extends BoardPathAlgorithm{
     private PriorityQueue<Node<Tile>> frontier;
     private Set<Tile> explored_tiles;
 
-    public UCSAlgorithm(float interval_in_sec, Tile start, Board board) {
-        super(interval_in_sec);
+    public UCSAlgorithm(int refreshRate, Tile start, Board board) {
+        super(refreshRate);
         setProblem(start, board);
     }
 

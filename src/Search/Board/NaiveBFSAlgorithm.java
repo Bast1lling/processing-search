@@ -12,8 +12,8 @@ public class NaiveBFSAlgorithm extends BoardPathAlgorithm {
 
     protected Queue<Node<Tile>> frontier;
 
-    public NaiveBFSAlgorithm(float interval_in_sec, Tile start, Board board) {
-        super(interval_in_sec);
+    public NaiveBFSAlgorithm(int refreshRate, Tile start, Board board) {
+        super(refreshRate);
         setProblem(start, board);
     }
 

@@ -19,8 +19,8 @@ public abstract class BoardPathAlgorithm extends Algorithm<Tile> {
 
     protected Node<Tile> goal;
 
-    protected BoardPathAlgorithm(float interval_in_sec) {
-        super(interval_in_sec);
+    protected BoardPathAlgorithm(int refreshRate) {
+        super(refreshRate);
     }
 
     public Node<Tile> getGoal() {
@@ -35,7 +35,7 @@ public abstract class BoardPathAlgorithm extends Algorithm<Tile> {
         Collection<Drawable> collection = goal.getRootPath().stream().map(tileNode -> (Drawable) (() -> tileNode.getState().draw(Color.WHITE))).collect(Collectors.toList());
         //reset goal
         this.goal = null;
-        return new StackVisualizer(2f/collection.size(),collection);
+        return new StackVisualizer(1,collection);
     }
 
 }

@@ -1,7 +1,6 @@
 package Visualization;
 
 import Basics.Drawable;
-import processing.core.PApplet;
 
 import java.util.*;
 
@@ -15,18 +14,18 @@ public abstract class Visualizer {
 
     private Collection<Drawable> current_frame;
 
-    protected Visualizer(float interval_in_sec) {
+    protected Visualizer(int refreshRate) {
         current_frame = new ArrayList<>();
-        max_duration = (int) (FRAME_RATE * interval_in_sec);
+        max_duration = refreshRate;
         counter = max_duration;
     }
 
     //get next frame
     public abstract Collection<Drawable> next();
 
-    public void visualizeStep(float duration){
+    public void visualizeStep(int refreshRate){
         //if buffer time is completed, change frame
-        if(counter >= (int) (FRAME_RATE*duration)) {
+        if(counter >= refreshRate) {
             current_frame = next();
             counter = 0;
         }

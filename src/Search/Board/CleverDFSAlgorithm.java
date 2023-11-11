@@ -16,8 +16,8 @@ public class CleverDFSAlgorithm extends BoardPathAlgorithm {
     protected List<Node<Tile>> frontier;
     private Set<Tile> explored_frontier;
 
-    public CleverDFSAlgorithm(float interval_in_sec, Tile start, Board board) {
-        super(interval_in_sec);
+    public CleverDFSAlgorithm(int refreshRate, Tile start, Board board) {
+        super(refreshRate);
         setProblem(start, board);
     }
 

@@ -138,6 +138,19 @@ public class Board implements Drawable{
         board[random_y][random_x].setColor(Color.BLACK);
     }
 
+    public void initializePerlinGreyBoard(){
+        float step_size = 0.085f;
+
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                float perlin = sketch.noise(i*step_size,j*step_size);
+                perlin = (perlin <= 0.17)?0:perlin;
+                Color c = new Color(perlin,perlin,perlin);
+                board[i][j].setColor(c);
+            }
+        }
+    }
+
     public void initializeSimplePerlinColorBoard(){
 
         float step_size = 0.035f;
