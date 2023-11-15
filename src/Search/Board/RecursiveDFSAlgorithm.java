@@ -5,6 +5,7 @@ import Basics.Drawable;
 import Basics.Tile;
 import Search.Action;
 import Search.Node;
+import processing.core.PVector;
 
 import java.awt.*;
 import java.util.*;
@@ -22,7 +23,7 @@ public class RecursiveDFSAlgorithm extends BoardPathAlgorithm{
         this.problem = new BoardPathProblem(start, board);
     }
 
-    public Collection<Drawable> complete(Set<Tile> explored, Node<Tile> current, Board board, int depth) {
+    public Collection<Drawable> complete(Set<Tile> explored, Node<Tile,Void, PVector> current, Board board, int depth) {
 
         if(depth <= 0 || current == null || current.getState() == null || explored.contains(current.getState()))
             return new ArrayList<>();
@@ -35,10 +36,10 @@ public class RecursiveDFSAlgorithm extends BoardPathAlgorithm{
             return result;
         }
 
-        List<Action> actions = problem.getActions(current.getState());
+        List<Action<Void, PVector>> actions = problem.getActions(current.getState());
         Collection<Drawable>[] part_solutions = new Collection[actions.size()];
         for(int i = 0; i<actions.size(); i++){
-            part_solutions[i] = complete(explored,current.getChild(problem,actions.get(i)),board,depth-1);
+            //part_solutions[i] = complete(explored,current.getChild(problem,actions.get(i)),board,depth-1);
         }
         Collection<Drawable> sofar = combineArray(part_solutions);
         if(!sofar.isEmpty())

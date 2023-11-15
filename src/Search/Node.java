@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Node<T> {
+public class Node<T,U,V> {
     private T state;
-    private Node<T> parent;
-    private Action action;
+    private Node<T,U,V> parent;
+    private Action<U,V> action;
     private int cost;
     private int depth = 1;
 
-    public Node(T state, Node<T> parent, Action action) {
+    public Node(T state, Node<T,U,V> parent, Action<U,V> action) {
         this.state = state;
         this.parent = parent;
         this.action = action;
@@ -19,19 +19,19 @@ public class Node<T> {
         this.depth = (parent != null)?(parent.depth + this.depth):0;
     }
 
-    public Node<T> getChild(Problem<T> problem, Action action){
+    public Node<T,U,V> getChild(Problem<T,U,V> problem, Action<U,V> action){
         T next = problem.getResult(state,action);
-        return new Node<T>(next,this,action);
+        return new Node<T,U,V>(next,this,action);
     }
 
-    public Node<T> getParent() {
+    public Node<T,U,V> getParent() {
         return parent;
     }
 
-    public List<Node<T>> getRootPath(){
-        List<Node<T>> rootPath = new ArrayList<>();
+    public List<Node<T,U,V>> getRootPath(){
+        List<Node<T,U,V>> rootPath = new ArrayList<>();
         rootPath.add(this);
-        Node<T> parent = this.parent;
+        Node<T,U,V> parent = this.parent;
         while (parent != null){
             rootPath.add(parent);
             parent = parent.parent;
@@ -39,17 +39,17 @@ public class Node<T> {
         return rootPath;
     }
 
-    public List<Node<T>> getChildren(Problem<T> problem){
-        List<Node<T>> children = new ArrayList<>();
-        List<Action> actions = problem.getActions(state);
-        for(Action a : actions){
+    public List<Node<T,U,V>> getChildren(Problem<T,U,V> problem){
+        List<Node<T,U,V>> children = new ArrayList<>();
+        List<Action<U,V>> actions = problem.getActions(state);
+        for(Action<U,V> a : actions){
             children.add(getChild(problem,a));
         }
         return children;
     }
 
-    public List<Action> getSolution(){
-        List<Node<T>> rootPath = getRootPath();
+    public List<Action<U,V>> getSolution(){
+        List<Node<T,U,V>> rootPath = getRootPath();
         return rootPath.stream().map(tNode -> tNode.action).collect(Collectors.toList());
     }
 

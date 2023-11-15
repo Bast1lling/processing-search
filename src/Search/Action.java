@@ -1,23 +1,15 @@
 package Search;
+import java.util.function.Function;
 
-public class Action{
-    private Actable actable;
-    private int id;
+public class Action<T,R>{
+    private Function<T,R> function;
 
-    public Action(Actable actable, int id) {
-        this.actable = actable;
-        this.id = id;
+    public Action(Function<T,R> function) {
+        this.function = function;
     }
 
-    public void act(){
-        actable.act();
+    public R act(T input){
+        return function.apply(input);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public boolean equals(Action action) {
-        return action.id == this.id;
-    }
 }

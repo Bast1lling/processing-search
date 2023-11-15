@@ -4,13 +4,14 @@ import Basics.Board;
 import Basics.Drawable;
 import Basics.Tile;
 import Search.Node;
+import processing.core.PVector;
 
 import java.awt.*;
 import java.util.*;
 
 public class NaiveBFSAlgorithm extends BoardPathAlgorithm {
 
-    protected Queue<Node<Tile>> frontier;
+    protected Queue<Node<Tile,Void, PVector>> frontier;
 
     public NaiveBFSAlgorithm(int refreshRate, Tile start, Board board) {
         super(refreshRate);
@@ -33,7 +34,7 @@ public class NaiveBFSAlgorithm extends BoardPathAlgorithm {
             return null;
 
         //make sure the option is inside the board
-        Node<Tile> node = frontier.poll();
+        Node<Tile,Void, PVector> node = frontier.poll();
         while (node.getState() == null){
             if(frontier.isEmpty())
                 return null;
@@ -45,7 +46,7 @@ public class NaiveBFSAlgorithm extends BoardPathAlgorithm {
 
         //create visualization of current node
         Collection<Drawable> drawables = new ArrayList<>();
-        Node<Tile> finalNode = node;
+        Node<Tile,Void, PVector> finalNode = node;
         drawables.add(() -> finalNode.getState().draw(Color.WHITE));
 
         //if option is good enough, set goal and return
@@ -55,7 +56,7 @@ public class NaiveBFSAlgorithm extends BoardPathAlgorithm {
         }
 
         //else select frontier by iterating over children
-        for(Node<Tile> child : node.getChildren(problem)){
+        for(Node<Tile,Void, PVector> child : node.getChildren(problem)){
             //select existing child, which has not yet been explored/ set out to be explored
             if(child != null && !explored.contains(child.getState()) && !frontier.contains(child)) {
                 frontier.add(child);

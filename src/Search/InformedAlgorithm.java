@@ -1,6 +1,6 @@
 package Search;
 
-public abstract class InformedAlgorithm<T> extends Algorithm<T>{
+public abstract class InformedAlgorithm<T,V,U> extends Algorithm<T,V,U>{
 
     protected Valuable<Float,T> f;
 

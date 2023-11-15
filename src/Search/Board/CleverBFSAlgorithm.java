@@ -4,13 +4,14 @@ import Basics.Board;
 import Basics.Drawable;
 import Basics.Tile;
 import Search.Node;
+import processing.core.PVector;
 
 import java.awt.*;
 import java.util.*;
 
 public class CleverBFSAlgorithm extends BoardPathAlgorithm {
 
-    protected Deque<Node<Tile>> frontier;
+    protected Deque<Node<Tile,Void, PVector>> frontier;
     private Set<Tile> explored_frontier;
 
     public CleverBFSAlgorithm(int refreshRate, Tile start, Board board) {
@@ -36,7 +37,7 @@ public class CleverBFSAlgorithm extends BoardPathAlgorithm {
             return null;
 
         //make sure the option is inside the board
-        Node<Tile> node = frontier.pop();
+        Node<Tile,Void, PVector> node = frontier.pop();
         while (node.getState() == null){
             if(frontier.isEmpty())
                 return null;
@@ -48,7 +49,7 @@ public class CleverBFSAlgorithm extends BoardPathAlgorithm {
 
         //create visualization of current node
         Collection<Drawable> drawables = new ArrayList<>();
-        Node<Tile> finalNode = node;
+        Node<Tile,Void, PVector> finalNode = node;
         drawables.add(() -> finalNode.getState().draw(Color.WHITE));
 
         //if option is good enough, set goal and return
@@ -58,7 +59,7 @@ public class CleverBFSAlgorithm extends BoardPathAlgorithm {
         }
 
         //else select frontier by iterating over children
-        for(Node<Tile> child : node.getChildren(problem)){
+        for(Node<Tile,Void, PVector> child : node.getChildren(problem)){
             //select existing child, which has not yet been explored/ set out to be explored
             if(child != null && !explored.contains(child.getState()) && !frontier.contains(child) &&!explored_frontier.contains(child.getState())) {
                 frontier.add(child);

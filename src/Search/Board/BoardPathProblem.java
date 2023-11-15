@@ -3,7 +3,6 @@ package Search.Board;
 import Basics.Board;
 import Basics.Tile;
 import Search.Action;
-import Search.Actable;
 import Search.Problem;
 import Search.Valuable;
 import processing.core.PVector;
@@ -11,9 +10,10 @@ import processing.core.PVector;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.Function;
 
-public class BoardPathProblem extends Problem<Tile> {
-    private Board board;
+public class BoardPathProblem extends Problem<Tile,Void,PVector> {
+    private final Board board;
 
     public BoardPathProblem(Tile state, Board board) {
         super(state);
@@ -23,61 +23,26 @@ public class BoardPathProblem extends Problem<Tile> {
     }
 
     @Override
-    public List<Action> getActions(Tile state) {
-        int x_index = board.getX(state);
-        int y_index = board.getY(state);
-        Actable move_up = () -> {
-            board.deselect(state);
-            Tile next = board.getTile(x_index,y_index-1);
-            board.select(next);
-        };
-        Actable move_right = () -> {
-            board.deselect(state);
-            Tile next = board.getTile(x_index+1,y_index);
-            board.select(next);
-        };
-        Actable move_left = () -> {
-            board.deselect(state);
-            Tile next = board.getTile(x_index-1,y_index);
-            board.select(next);
-        };
-        Actable move_down = () -> {
-            board.deselect(state);
-            Tile next = board.getTile(x_index,y_index+1);
-            board.select(next);
-        };
-        List<Action> actions = new ArrayList<>();
-        Action up = new Action(move_up,0);
+    public List<Action<Void,PVector>> getActions(Tile state) {
+        List<Action<Void,PVector>> actions = new ArrayList<>();
+        Action<Void,PVector> up = new Action<Void,PVector>(x-> new PVector(0,-1));
         actions.add(up);
-        Action right = new Action(move_right,1);
+        Action<Void,PVector> right = new Action<Void,PVector>(x-> new PVector(1,0));
         actions.add(right);
-        Action down = new Action(move_down,2);
+        Action<Void,PVector> down = new Action<Void,PVector>(x-> new PVector(-1,0));
         actions.add(down);
-        Action left = new Action(move_left,3);
+        Action<Void,PVector> left = new Action<Void,PVector>(x-> new PVector(0,1));
         actions.add(left);
         Collections.shuffle(actions);
         return actions;
     }
 
     @Override
-    public Tile getResult(Tile state, Action action) {
+    public Tile getResult(Tile state, Action<Void,PVector> action) {
         int x = board.getX(state);
         int y = board.getY(state);
-        switch (action.getId()) {
-            //UP
-            case 0 -> {
-                return board.getTile(x, y - 1);
-            }//RIGHT
-            case 1 -> {
-                return board.getTile(x + 1, y);
-            }//DOWN
-            case 2 -> {
-                return board.getTile(x, y + 1);
-            }//LEFT
-            default -> {
-                return board.getTile(x - 1, y);
-            }
-        }
+        PVector p = action.act(null);
+        return board.getTile(x + (int)p.x, y+ (int)p.y);
     }
 
     @Override

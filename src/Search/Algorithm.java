@@ -2,8 +2,8 @@ package Search;
 
 import Visualization.Visualizer;
 
-public abstract class Algorithm<T> extends Visualizer {
-    protected Problem<T> problem;
+public abstract class Algorithm<T,V,U> extends Visualizer {
+    protected Problem<T,V,U> problem;
     protected int current_step;
 
     protected Algorithm(int refreshRate) {

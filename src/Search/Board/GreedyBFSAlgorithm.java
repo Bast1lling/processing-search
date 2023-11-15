@@ -11,7 +11,7 @@ import java.util.*;
 
 public class GreedyBFSAlgorithm extends InformedBoardPathAlgorithm{
 
-    private PriorityQueue<Node<Tile>> frontier;
+    private PriorityQueue<Node<Tile,Void, PVector>> frontier;
     private Set<Tile> explored_tiles;
 
     public GreedyBFSAlgorithm(int refreshRate, Tile start, Board board) {
@@ -57,7 +57,7 @@ public class GreedyBFSAlgorithm extends InformedBoardPathAlgorithm{
             return null;
 
         //make sure the option is inside the board
-        Node<Tile> node = frontier.poll();
+        Node<Tile,Void, PVector> node = frontier.poll();
         while (node.getState() == null){
             if(frontier.isEmpty())
                 return null;
@@ -69,7 +69,7 @@ public class GreedyBFSAlgorithm extends InformedBoardPathAlgorithm{
 
         //create visualization of current node
         Collection<Drawable> drawables = new ArrayList<>();
-        Node<Tile> finalNode = node;
+        Node<Tile,Void, PVector> finalNode = node;
         drawables.add(() -> finalNode.getState().draw(Color.WHITE));
 
         //if option is good enough, set goal and return
@@ -79,7 +79,7 @@ public class GreedyBFSAlgorithm extends InformedBoardPathAlgorithm{
         }
 
         //else select frontier by iterating over children
-        for(Node<Tile> child : node.getChildren(problem)){
+        for(Node<Tile,Void, PVector> child : node.getChildren(problem)){
             //select existing child, which has not yet been explored/ set out to be explored
             if(child != null && !explored.contains(child.getState()) && !frontier.contains(child) &&!explored_tiles.contains(child.getState())) {
                 frontier.add(child);

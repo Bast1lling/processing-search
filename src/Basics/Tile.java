@@ -23,6 +23,14 @@ public class Tile implements Drawable{
         this.sketch = sketch;
     }
 
+    public Tile(float x, float y, float sX, float sY, PApplet sketch){
+        this.x = x;
+        this.y = y;
+        this.sX = sX;
+        this.sY = sY;
+        this.sketch = sketch;
+    }
+
     public void draw(){
         if(mark){
             sketch.fill(damp(50).getRGB());
