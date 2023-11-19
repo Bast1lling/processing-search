@@ -1,55 +1,44 @@
-package Basics;
+package Board;
 
+import Basics.Drawable;
 import processing.core.PApplet;
 
 import java.awt.*;
 
-public class Tile implements Drawable{
-    private float x;
-    private float y;
-    private float sX;
-    private float sY;
+public class Tile implements Drawable {
+    protected float x;
+    protected float y;
+    protected float scale;
     private Color color;
-    private PApplet sketch;
+    protected PApplet sketch;
 
-    boolean mark = false;
-
-    public Tile(float x, float y, float sX, float sY, Color color, PApplet sketch) {
+    public Tile(float x, float y, float scale, Color color, PApplet sketch) {
         this.x = x;
         this.y = y;
-        this.sX = sX;
-        this.sY = sY;
+        this.scale = scale;
         this.color = color;
         this.sketch = sketch;
     }
 
-    public Tile(float x, float y, float sX, float sY, PApplet sketch){
+    public Tile(float x, float y, float scale, PApplet sketch){
         this.x = x;
         this.y = y;
-        this.sX = sX;
-        this.sY = sY;
+        this.scale = scale;
         this.sketch = sketch;
     }
 
     public void draw(){
-        if(mark){
-            sketch.fill(damp(50).getRGB());
-            sketch.strokeWeight((sX+sY)/32f);
-            sketch.stroke(255);
-        }
-        else {
-            sketch.fill(color.getRGB());
-            sketch.strokeWeight(1);
-            sketch.stroke(0);
-        }
-        sketch.rect(x,y,sX,sY);
+        sketch.fill(color.getRGB());
+        sketch.strokeWeight(1);
+        sketch.stroke(0);
+        sketch.rect(x,y,scale,scale);
     }
 
     public void draw(Color color){
         sketch.fill(color.getRGB());
-        sketch.strokeWeight((sX+sY)/32f);
+        sketch.strokeWeight(1);
         sketch.stroke(255);
-        sketch.rect(x,y,sX,sY);
+        sketch.rect(x,y,scale,scale);
     }
 
     private Color damp(int intensity){
@@ -58,15 +47,6 @@ public class Tile implements Drawable{
         int green = (color.getGreen() > intensity)?(color.getGreen() - intensity):0;
         return new Color(red,green,blue);
     }
-
-    public boolean isMark() {
-        return mark;
-    }
-
-    public void setMark(boolean mark) {
-        this.mark = mark;
-    }
-
     public Color getColor() {
         return color;
     }
@@ -87,9 +67,7 @@ public class Tile implements Drawable{
         return "{x=" + x + ", y=" + y + ", =c=" + color.toString() +"}";
     }
 
-    public int hasColor(Color color){
-        if(this.color.equals(color))
-            return 0;
-        else return 1;
+    public boolean hasColor(Color color){
+        return this.getColor().equals(color);
     }
 }

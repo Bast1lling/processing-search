@@ -1,8 +1,7 @@
 package Search.Board;
 
-import Basics.Board;
+import Board.*;
 import Basics.Drawable;
-import Basics.Tile;
 import Search.Action;
 import Search.Node;
 import processing.core.PVector;
@@ -10,8 +9,8 @@ import processing.core.PVector;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-
-public class RecursiveDFSAlgorithm extends BoardPathAlgorithm{
+/*
+public class RecursiveDFSAlgorithm extends BoardPathAlgorithm {
 
 
     public RecursiveDFSAlgorithm(int refreshRate) {
@@ -20,7 +19,7 @@ public class RecursiveDFSAlgorithm extends BoardPathAlgorithm{
 
     public void setProblem(Tile start, Board board) {
         resetDrawables();
-        this.problem = new BoardPathProblem(start, board);
+        this.problem = new BoardPathProblem(start, board, t -> t.hasColor(Color.BLACK));
     }
 
     public Collection<Drawable> complete(Set<Tile> explored, Node<Tile,Void, PVector> current, Board board, int depth) {
@@ -60,3 +59,5 @@ public class RecursiveDFSAlgorithm extends BoardPathAlgorithm{
         return null;
     }
 }
+
+ */

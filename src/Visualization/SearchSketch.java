@@ -1,7 +1,7 @@
 package Visualization;
 
-import Basics.Board;
-import Basics.Tile;
+import Board.Board;
+import Board.Tile;
 import Search.Board.*;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
@@ -10,12 +10,10 @@ import java.awt.*;
 
 public class SearchSketch extends PApplet {
     Board board;
-    CleverDFSAlgorithm cleverDFS;
-    CleverBFSAlgorithm cleverBFS;
+    DFSAlgorithm cleverDFS;
+    BFSAlgorithm cleverBFS;
 
     UCSAlgorithm ucsAlgorithm;
-
-    RecursiveDFSAlgorithm recurDFS;
 
     GreedyBFSAlgorithm greedyBFS;
 
@@ -29,12 +27,11 @@ public class SearchSketch extends PApplet {
     public void settings() {
         size(700,700);
         Color[] colors = {Color.BLUE, Color.RED,Color.GREEN};
-        board = new Board(70,70,this, colors);
+        board = new Board(10,this);
         board.initializePerlinGreyBoard();
         int refreshRate = 1;
-        cleverDFS = new CleverDFSAlgorithm(refreshRate,board.getTile(0,0),board);
-        cleverBFS = new CleverBFSAlgorithm(refreshRate,board.getTile(0,0),board);
-        recurDFS = new RecursiveDFSAlgorithm(refreshRate);
+        cleverDFS = new DFSAlgorithm(refreshRate,board.getTile(0,0),board);
+        cleverBFS = new BFSAlgorithm(refreshRate,board.getTile(0,0),board);
         ucsAlgorithm = new UCSAlgorithm(refreshRate,board.getTile(0,0),board);
         greedyBFS = new GreedyBFSAlgorithm(refreshRate,board.getTile(0,0),board);
     }
@@ -61,7 +58,6 @@ public class SearchSketch extends PApplet {
         Tile tile = board.getCurrentPositionInMap(mouseX,mouseY);
         cleverBFS.setProblem(tile,board);
         cleverDFS.setProblem(tile,board);
-        recurDFS.setProblem(tile,board);
         ucsAlgorithm.setProblem(tile,board);
         greedyBFS.setProblem(tile,board);
         //visualizer = new StackVisualizer(0.005f, recurDFS.complete(new HashSet<>(),new Node<>(tile,null,null),board,1000));

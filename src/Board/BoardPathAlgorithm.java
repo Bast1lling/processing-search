@@ -1,31 +1,38 @@
-package Search.Board;
+package Board;
 
-import Basics.Board;
 import Basics.Drawable;
-import Basics.Tile;
+import Search.Algorithm;
 import Search.Node;
+import Visualization.StackVisualizer;
+import Visualization.Visualizer;
 import processing.core.PVector;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class NaiveBFSAlgorithm extends BoardPathAlgorithm {
+public abstract class BoardPathAlgorithm extends Algorithm<Tile,Void,PVector> {
 
-    protected Queue<Node<Tile,Void, PVector>> frontier;
+    protected BoardPathProblem problem;
+    protected Set<Tile> explored;
+    protected Set<Tile> explored_tiles;
 
-    public NaiveBFSAlgorithm(int refreshRate, Tile start, Board board) {
+    protected Collection<Node<Tile,Void, PVector>> frontier;
+
+    protected Node<Tile,Void, PVector> goal;
+
+    protected BoardPathAlgorithm(int refreshRate) {
         super(refreshRate);
-        setProblem(start, board);
     }
 
-    public void setProblem(Tile start, Board board) {
-        resetDrawables();
-        this.problem = new BoardPathProblem(start, board);
-        frontier = new LinkedList<>();
-        frontier.add(new Node<>(start,null,null));
-        explored = new HashSet<>();
-        goal = null;
+    public Node<Tile,Void, PVector> getGoal() {
+        return goal;
     }
+
+    protected abstract Node<Tile,Void, PVector> getNext();
+
+    protected abstract void setProblem(Tile start, Board board);
 
     @Override
     public Collection<Drawable> next() {
@@ -34,11 +41,11 @@ public class NaiveBFSAlgorithm extends BoardPathAlgorithm {
             return null;
 
         //make sure the option is inside the board
-        Node<Tile,Void, PVector> node = frontier.poll();
+        Node<Tile,Void, PVector> node = getNext();
         while (node.getState() == null){
             if(frontier.isEmpty())
                 return null;
-            node = frontier.poll();
+            node = getNext();
         }
 
         //explore option
@@ -58,12 +65,25 @@ public class NaiveBFSAlgorithm extends BoardPathAlgorithm {
         //else select frontier by iterating over children
         for(Node<Tile,Void, PVector> child : node.getChildren(problem)){
             //select existing child, which has not yet been explored/ set out to be explored
-            if(child != null && !explored.contains(child.getState()) && !frontier.contains(child)) {
+            if(child != null && !explored.contains(child.getState()) && !frontier.contains(child) &&!explored_tiles.contains(child.getState())) {
                 frontier.add(child);
+                explored_tiles.add(child.getState());
                 if(child.getState() != null)
                     drawables.add(() -> child.getState().draw(Color.GRAY));
             }
         }
         return drawables;
     }
+
+    @Override
+    public Visualizer solution() {
+        while (goal == null)
+            next();
+
+        Collection<Drawable> collection = goal.getRootPath().stream().map(tileNode -> (Drawable) (() -> tileNode.getState().draw(Color.WHITE))).collect(Collectors.toList());
+        //reset goal
+        this.goal = null;
+        return new StackVisualizer(1,collection);
+    }
+
 }

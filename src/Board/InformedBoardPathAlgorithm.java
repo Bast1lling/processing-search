@@ -1,8 +1,8 @@
-package Search.Board;
+package Board;
 
 import Basics.Drawable;
-import Basics.Tile;
-import Search.Algorithm;
+import Board.BoardPathProblem;
+import Board.Tile;
 import Search.InformedAlgorithm;
 import Search.Node;
 import Visualization.StackVisualizer;

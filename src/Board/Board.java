@@ -1,51 +1,49 @@
-package Basics;
+package Board;
 
+import Basics.Drawable;
+import Search.Action;
 import processing.core.PApplet;
 import processing.core.PVector;
 
 import java.awt.*;
-import java.util.*;
-import java.util.List;
 
-public class Board implements Drawable{
-    private PVector top_left_corner;
+public class Board implements Drawable {
+    private final PVector position;
+
     private final Tile[][] board;
-
-    public Set<Tile> marked;
     private final int width;
     private final int height;
 
-    private final int tile_width;
-    private final int tile_height;
+    private float step_size = 0.05f;
 
-    public static final Color[] setColors = {Color.RED,Color.GREEN,Color.CYAN,Color.ORANGE};
+    private final float tile_scale;
+    private final PApplet sketch;
 
-    int setColorIndex = 0;
-
-    private PApplet sketch;
-
-    public Board(int width, int height, PApplet sketch, Color[] colors){
+    public Board(float tile_scale, PApplet sketch){
+        this.tile_scale = tile_scale;
         this.sketch = sketch;
-        tile_width = sketch.width/width;
-        tile_height = sketch.height/height;
+        this.width = (int) (sketch.width/tile_scale);
+        this.height = (int) (sketch.height/tile_scale);
         board = new Tile[height][width];
-        this.width = width;
-        this.height = height;
-        marked = new HashSet<>();
-        top_left_corner = new PVector();
-        for(int i = 0; i < height; i++){
-            Tile[] row = new Tile[width];
-            for(int j = 0; j < width; j++){
-                int random = (int) (colors.length*Math.random());
-                Color c = colors[random];
-                Tile t = new Tile(j*tile_width, i*tile_height, tile_width, tile_height, c, sketch);
-                row[j] = t;
-            }
-            board[i] = row;
-        }
-        int random_x = (int) (Math.random() * width);
-        int random_y = (int) (Math.random() * height);
-        board[random_y][random_x].setColor(Color.BLACK);
+        position = new PVector();
+        initializeTiles();
+        initializeSimplePerlinColorBoard();
+    }
+
+    protected Board(float tile_scale, PApplet sketch, PVector topLeft, PVector bottomRight){
+        this.tile_scale = tile_scale;
+        this.sketch = sketch;
+        this.position = topLeft.copy();
+        PVector boardScales = PVector.sub(bottomRight,topLeft);
+        this.width = (int) (boardScales.x/tile_scale);
+        this.height = (int) (boardScales.y/tile_scale);
+        board = new Tile[height][width];
+        initializeTiles();
+        initializeSimplePerlinColorBoard();
+    }
+
+    public void move(Action<Void,PVector> action){
+        this.position.add(action.act(null).mult(tile_scale));
     }
 
     //distributes the given colors randomly over the board and chooses a random goal tile
@@ -118,7 +116,7 @@ public class Board implements Drawable{
 
         float x = (float) (width*Math.random());
 
-        float step_size = 0.06f;
+        this.step_size = 0.06f;
 
         int max = 255;
         int min = 0;
@@ -139,7 +137,7 @@ public class Board implements Drawable{
     }
 
     public void initializePerlinGreyBoard(){
-        float step_size = 0.085f;
+        this.step_size = 0.085f;
 
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
@@ -153,14 +151,14 @@ public class Board implements Drawable{
 
     public void initializeSimplePerlinColorBoard(){
 
-        float step_size = 0.035f;
+        this.step_size = 0.035f;
         float b1 = 0.33f;
         float b2 = 0.66f;
 
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
                 float perlin = sketch.noise(i*step_size,j*step_size);
-                Color c = Color.BLACK;
+                Color c;
                 if(perlin < b1)
                     c = Color.RED;
                 else if (perlin < b2)
@@ -173,6 +171,16 @@ public class Board implements Drawable{
         int random_x = (int) (Math.random() * width);
         int random_y = (int) (Math.random() * height);
         board[random_y][random_x].setColor(Color.BLACK);
+    }
+
+    private void initializeTiles(){
+        for(int i = 0; i < this.height; i++){
+            Tile[] row = new Tile[this.width];
+            for(int j = 0; j < this.width; j++){
+                row[j] = new Tile(this.position.x + j*this.tile_scale, this.position.y + i*this.tile_scale, this.tile_scale, this.sketch);
+            }
+            board[i] = row;
+        }
     }
 
     public Tile getTile(int x, int y){
@@ -193,40 +201,14 @@ public class Board implements Drawable{
         return height;
     }
 
-    public int getTile_width() {
-        return tile_width;
-    }
-
-    public int getTile_height() {
-        return tile_height;
-    }
-
     public void draw(){
         for (Tile[] row:
              board) {
             for (Tile t:
                  row) {
-                if(!t.isMark())
-                    t.draw();
+                t.draw();
             }
         }
-        for(Tile t : marked){
-            t.draw();
-        }
-    }
-    public void select(Tile t){
-        marked.add(t);
-    }
-
-    public void deselect(Tile t){
-        marked.remove(t);
-    }
-
-    public void clearMarked(){
-        for(Tile t : marked){
-            t.setMark(false);
-        }
-        marked.clear();
     }
 
     public void print(){
@@ -239,20 +221,20 @@ public class Board implements Drawable{
     }
 
     public Tile getCurrentPositionInMap(int mouseX, int mouseY) {
-        float x = mouseX - top_left_corner.x;
-        float y = mouseY - top_left_corner.y;
+        float x = mouseX - position.x;
+        float y = mouseY - position.y;
         if(x >= 0 && y >= 0)
-            return board[(int) (y/tile_height)][(int) (x/tile_width)];
+            return board[(int) (y/tile_scale)][(int) (x/tile_scale)];
         else return null;
     }
 
     public int getX(Tile t){
-        float x = t.getX() - top_left_corner.x;
-        return (int) (x/tile_width);
+        float x = t.getX() - position.x;
+        return (int) (x/tile_scale);
     }
 
     public int getY(Tile t){
-        float y = t.getY() - top_left_corner.y;
-        return (int) (y/tile_height);
+        float y = t.getY() - position.y;
+        return (int) (y/tile_scale);
     }
 }

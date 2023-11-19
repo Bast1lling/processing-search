@@ -28,6 +28,10 @@ public class Node<T,U,V> {
         return parent;
     }
 
+    public Action<U, V> getAction() {
+        return action;
+    }
+
     public List<Node<T,U,V>> getRootPath(){
         List<Node<T,U,V>> rootPath = new ArrayList<>();
         rootPath.add(this);

@@ -1,7 +1,7 @@
-package Search.Board;
+package Board;
 
-import Basics.Board;
-import Basics.Tile;
+import Board.Board;
+import Board.Tile;
 import Search.Action;
 import Search.Problem;
 import Search.Valuable;
@@ -10,13 +10,13 @@ import processing.core.PVector;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class BoardPathProblem extends Problem<Tile,Void,PVector> {
     private final Board board;
 
-    public BoardPathProblem(Tile state, Board board) {
-        super(state);
+    public BoardPathProblem(Tile state, Board board, Predicate<Tile> reached) {
+        super(state,reached);
         this.board = board;
         //define cost by absolute difference of two colors
         this.costCalculator = compareCostByColorDist();
@@ -43,11 +43,6 @@ public class BoardPathProblem extends Problem<Tile,Void,PVector> {
         int y = board.getY(state);
         PVector p = action.act(null);
         return board.getTile(x + (int)p.x, y+ (int)p.y);
-    }
-
-    @Override
-    public boolean reached(Tile current) {
-        return current.hasColor(Color.BLACK) == 0;
     }
 
     public static Valuable<Float,Tile> compareCostByColorDist(){
